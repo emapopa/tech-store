@@ -7,6 +7,13 @@ const ForgotPassword = ({ history }) => {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const { user } = useSelector((state) => ({ ...state }));
+
+  //this check if user is allready logged in
+  useEffect(() => {
+    if (user && user.token) history.push("/");
+  }, [user]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
