@@ -1,5 +1,5 @@
 import React from "react";
-import ReactDOM from "react-dom";
+import createRoot from "react-dom";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
@@ -17,7 +17,7 @@ import rootReducer from "./reducers";
 
 const store = createStore(rootReducer, composeWithDevTools());
 
-ReactDOM.render(
+createRoot.render(
   // <React.StrictMode>
   <Provider store={store}>
     <BrowserRouter>
