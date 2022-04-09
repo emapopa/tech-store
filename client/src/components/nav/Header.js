@@ -56,7 +56,7 @@ const Header = () => {
       {user && (
         <SubMenu
           icon={<SettingOutlined />}
-          title={user.email && user.email.split("@")[0]}
+          title={user.email && user.email.split("@")[0]}// split is going to show just the prefix of the email
           className="float-right"
         >
           <Item key="setting:1">Option 1</Item>
