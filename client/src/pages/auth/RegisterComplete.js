@@ -1,13 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { auth } from "../../firebase";
 import { toast } from "react-toastify";
+import { useDispatch, useSelector } from "react-redux";
+import { createOrUpdateUser } from "../../functions/auth";
 
 
 // used history becuz i want to use history.push ("/") to direct users to other pages
 const RegisterComplete = ({ history }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-// take email from localstorage from previews registration step
+
+  const { user } = useSelector((state) => ({ ...state }));
+  
+  let dispatch = useDispatch();
+  // take email from localstorage from previews registration step
   useEffect(() => {
     setEmail(window.localStorage.getItem("emailForRegistration"));
   }, []);
@@ -27,7 +33,7 @@ const RegisterComplete = ({ history }) => {
     try {
       const result = await auth.signInWithEmailLink(
         email,
-        window.location.href // to grab the url 
+        window.location.href // to grab the url
       );
       //   console.log("RESULT", result);
       if (result.user.emailVerified) {
@@ -36,9 +42,33 @@ const RegisterComplete = ({ history }) => {
         // get user id token
         let user = auth.currentUser;
         await user.updatePassword(password);
+        await user
+        .updateProfile({
+          displayName: "",
+        })
+        .then(function () {
+          // Update successful.
+        })
+
+
         const idTokenResult = await user.getIdTokenResult();
         // redux store
         console.log("user", user, "idTokenResult", idTokenResult);
+
+        createOrUpdateUser(idTokenResult.token)
+          .then((res) => {
+            dispatch({
+              type: "LOGGED_IN_USER",
+              payload: {
+                name: res.data.name,
+                email: res.data.email,
+                token: idTokenResult.token,
+                role: res.data.role,
+                _id: res.data._id,
+              },
+            });
+          })
+          .catch();
         // redirect
         history.push("/");
       }
@@ -47,6 +77,7 @@ const RegisterComplete = ({ history }) => {
       toast.error(error.message);
     }
   };
+
 
   const completeRegistrationForm = () => (
     <form onSubmit={handleSubmit}>
