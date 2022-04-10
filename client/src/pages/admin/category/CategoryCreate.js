@@ -11,13 +11,15 @@ import {
 import { Link } from "react-router-dom";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import CategoryForm from "../../../components/forms/CategoryForm";
-
+import LocalSearch from "../../../components/forms/LocalSearch";
 const CategoryCreate = () => {
   const { user } = useSelector((state) => ({ ...state }));
 
   const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
   const [categories, setCategories] = useState([]);
+  //for searching categorys
+  const [keyword, setKeyword] = useState("");
 
   useEffect(() => {
     loadCategories();
@@ -65,6 +67,8 @@ const CategoryCreate = () => {
     }
   };
 
+  const searched = (keyword) => (c) => c.name.toLowerCase().includes(keyword);
+
   return (
     <div className="container-fluid">
       <div className="row">
@@ -82,8 +86,10 @@ const CategoryCreate = () => {
             name={name}
             setName={setName}
           />
-          <hr />
-          {categories.map((c) => (
+
+          <LocalSearch keyword={keyword} setKeyword={setKeyword} />
+
+          {categories.filter(searched(keyword)).map((c) => (
             <div className="alert alert-secondary" key={c._id}>
               {c.name}
               <span
