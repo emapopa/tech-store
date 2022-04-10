@@ -24,7 +24,7 @@ const CategoryCreate = () => {
   useEffect(() => {
     loadCategories();
   }, []);
-
+//
   const loadCategories = () =>
     getCategories().then((c) => setCategories(c.data));
 
