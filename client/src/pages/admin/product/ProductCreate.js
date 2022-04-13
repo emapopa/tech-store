@@ -59,14 +59,15 @@ const ProductCreate = () => {
     // console.log(e.target.name, " ----- ", e.target.value);
   };
 
-  const handleCatagoryChange = (e) => {
+  const handleCategoryChange = (e) => {
     e.preventDefault();
     console.log("CLICKED CATEGORY", e.target.value);
-    setValues({ ...values, category: e.target.value });
+    setValues({ ...values, subs: [], category: e.target.value });
     getCategorySubs(e.target.value).then((res) => {
       console.log("SUB OPTIONS ON CATGORY CLICK", res);
       setSubOptions(res.data);
     });
+    setShowSub(true);
   };
   return (
     <div className="container-fluid">
@@ -77,13 +78,13 @@ const ProductCreate = () => {
         <div className="col-md-10">
           <h4>Product create</h4>
           <hr />
-         {JSON.stringify(values.subs)}
+        
           <ProductCreateForm
             handleSubmit={handleSubmit}
             handleChange={handleChange}
             setValues={setValues}
             values={values}
-            handleCatagoryChange={handleCatagoryChange}
+            handleCategoryChange={handleCategoryChange}
             subOptions={subOptions}
             showSub={showSub}
           />
