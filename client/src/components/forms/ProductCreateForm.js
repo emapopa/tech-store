@@ -128,7 +128,8 @@ const ProductCreateForm = ({
         </select>
       </div>
 
-      <div>
+     {showSub && (
+     <div>
         <label>Sub Categories</label>
         <Select
           mode="multiple"
@@ -145,6 +146,7 @@ const ProductCreateForm = ({
               ))}
         </Select>
       </div>
+     )}
 
      
       <button className="btn btn-outline-info">Save</button>
