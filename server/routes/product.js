@@ -9,6 +9,6 @@ const { create, read} = require("../controllers/product");
 
 // routes
 router.post("/product", authCheck, adminCheck, create);
-router.get("/products", read);
+router.get("/products/:count", listAll);
 
 module.exports = router;
