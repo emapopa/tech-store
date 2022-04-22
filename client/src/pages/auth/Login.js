@@ -7,9 +7,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { createOrUpdateUser } from "../../functions/auth";
 
-
-
-
 const Login = ({ history }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -17,19 +14,31 @@ const Login = ({ history }) => {
 
   //this will check if the user is logged in
   const { user } = useSelector((state) => ({ ...state }));
+
   useEffect(() => {
-    if (user && user.token) history.push("/");
+    let intended = history.location.state;
+    if (intended) {
+      return;
+    } else {
+      if (user && user.token) history.push("/");
+    }
   }, [user, history]);
 
   let dispatch = useDispatch();
+
   const roleBasedRedirect = (res) => {
-    if (res.data.role === "admin") {
-      history.push("/admin/dashboard");
+    // check if intended this will redirect the user to the page before the login
+    let intended = history.location.state;
+    if (intended) {
+      history.push(intended.from);
     } else {
-      history.push("/user/history");
+      if (res.data.role === "admin") {
+        history.push("/admin/dashboard");
+      } else {
+        history.push("/user/history");
+      }
     }
   };
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -57,7 +66,7 @@ const Login = ({ history }) => {
         })
         .catch();
 
-     // history.push("/");
+      // history.push("/");
     } catch (error) {
       console.log(error);
       toast.error(error.message);
@@ -86,7 +95,7 @@ const Login = ({ history }) => {
             roleBasedRedirect(res);
           })
           .catch();
-       // history.push("/");
+        // history.push("/");
       })
       .catch((err) => {
         console.log(err);
