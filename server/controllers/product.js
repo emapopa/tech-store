@@ -158,16 +158,17 @@ exports.listRelated = async (req, res) => {
     category: product.category,
   })
     .limit(3)
-    .populate("category")
-    .populate("subs")
-    .populate("ratings.postedBy")
+    .populate("category", "_id name")
+    .populate("subs", "_id name")
+    .populate("postedBy", "_id name")
     .exec();
 
   res.json(related);
 };
 // SERACH / FILTER
+
 const handleQuery = async (req, res, query) => {
-  const products = await Product.find({ $text: { $search: query } })
+  const products = await Product.findOne({ $text: { $search: query } })
     .populate("category", "_id name")
     .populate("subs", "_id name")
     .populate("postedBy", "_id name")
@@ -176,11 +177,15 @@ const handleQuery = async (req, res, query) => {
   res.json(products);
 };
 
+
+
 exports.searchFilters = async (req, res) => {
   const { query } = req.body;
 
   if (query) {
-    console.log("query", query);
+    console.log("query --->", query);
     await handleQuery(req, res, query);
   }
-};
+}
+
+  // price [20, 200]
