@@ -3,7 +3,7 @@ import createRoot from "react-dom";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-import "mdbreact/dist/css/mdb.css";
+
 import { BrowserRouter } from "react-router-dom";
 import "antd/dist/antd.css";
 import "bootstrap/dist/css/bootstrap.min.css";
