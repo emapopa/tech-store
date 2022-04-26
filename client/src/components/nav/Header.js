@@ -1,16 +1,17 @@
 import React, { useState } from "react";
-import { Menu } from "antd";
+import { Menu, Badge } from "antd";
 import {
   AppstoreOutlined,
   SettingOutlined,
   UserOutlined,
   UserAddOutlined,
   LogoutOutlined,
-  ShoppingOutlined
+  ShoppingOutlined,
+  ShoppingCartOutlined,
 } from "@ant-design/icons";
 import { Link } from "react-router-dom";
-import firebase from "firebase/compat";
-import { useDispatch,useSelector } from "react-redux";
+import firebase from "firebase";
+import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import Search from "../forms/Search";
 
@@ -18,15 +19,17 @@ const { SubMenu, Item } = Menu;
 
 const Header = () => {
   const [current, setCurrent] = useState("home");
-  let dispatch = useDispatch()
-  let { user } = useSelector((state) => ({ ...state })); // we can accsess yhe user from the statte 
 
-  let history = useHistory()
+  let dispatch = useDispatch();
+  let { user, cart } = useSelector((state) => ({ ...state }));
+
+  let history = useHistory();
 
   const handleClick = (e) => {
     // console.log(e.key);
     setCurrent(e.key);
   };
+
   const logout = () => {
     firebase.auth().signOut();
     dispatch({
@@ -39,11 +42,17 @@ const Header = () => {
   return (
     <Menu onClick={handleClick} selectedKeys={[current]} mode="horizontal">
       <Item key="home" icon={<AppstoreOutlined />}>
-       <Link to="/" >Home</Link>
+        <Link to="/">Home</Link>
       </Item>
 
       <Item key="shop" icon={<ShoppingOutlined />}>
-       <Link to="/shop" >Shop</Link>
+        <Link to="/shop">Shop</Link>
+      </Item>
+
+      <Item key="cart" icon={<ShoppingCartOutlined />}>
+        <Link to="/cart"> 
+          <Badge count={cart.length} offset={[9, 0]}
+          >Cart</Badge></Link>
       </Item>
 
       {!user && (
@@ -61,7 +70,7 @@ const Header = () => {
       {user && (
         <SubMenu
           icon={<SettingOutlined />}
-          title={user.email && user.email.split("@")[0]}// split is going to show just the prefix of the email
+          title={user.email && user.email.split("@")[0]}
           className="float-right"
         >
           {user && user.role === "subscriber" && (
@@ -81,6 +90,7 @@ const Header = () => {
           </Item>
         </SubMenu>
       )}
+
       <span className="float-right p-1">
         <Search />
       </span>
