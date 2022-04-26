@@ -206,7 +206,7 @@ exports.searchFilters = async (req, res) => {
   }
 
   // price [20, 200]
-  if (price !== undfined) {
+  if (price !== undefined) {
     console.log("price ---> ", price);
     await handlePrice(req, res, price);
   }
