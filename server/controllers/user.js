@@ -1,7 +1,7 @@
 const User = require("../models/user");
 const Product = require("../models/product");
 const Cart = require("../models/cart");
-
+const Coupon = require("../models/coupon");
 exports.userCart = async (req, res) => {
   // console.log(req.body); // {cart: []}
   const { cart } = req.body;
@@ -80,6 +80,7 @@ exports.saveAddress = async (req, res) => {
   res.json({ ok: true });
 };
 
+
 exports.applyCouponToUserCart = async (req, res) => {
   const { coupon } = req.body;
   console.log("COUPON", coupon);
@@ -95,7 +96,7 @@ exports.applyCouponToUserCart = async (req, res) => {
   const user = await User.findOne({ email: req.user.email }).exec();
 
   let { products, cartTotal } = await Cart.findOne({ orderdBy: user._id })
-    .populat("products.product", "_id title price")
+    .populate("products.product", "_id title price")
     .exec();
 
   console.log("cartTotal", cartTotal, "discount%", validCoupon.discount);
