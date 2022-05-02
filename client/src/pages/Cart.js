@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import ProductCardInCheckout from "../components/cards/ProductCardInCheckout";
 
-const Cart = () => {
+const Cart = ({ history }) => {
   const { cart, user } = useSelector((state) => ({ ...state }));
   const dispatch = useDispatch();
   const getTotal = () => {
@@ -13,7 +13,8 @@ const Cart = () => {
   };
 
   const saveOrderToDb = () => {
-    //
+    alert("save order to db");
+    history.push("/checkout");
   };
 
   const showCartItems = () => (
