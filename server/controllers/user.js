@@ -3,6 +3,7 @@ const Product = require("../models/product");
 const Cart = require("../models/cart");
 const Coupon = require("../models/coupon");
 const Order = require("../models/order");
+
 exports.userCart = async (req, res) => {
   // console.log(req.body); // {cart: []}
   const { cart } = req.body;
@@ -25,6 +26,7 @@ exports.userCart = async (req, res) => {
     object.product = cart[i]._id;
     object.count = cart[i].count;
     object.color = cart[i].color;
+    // get price for creating total
     let productFromDb = await Product.findById(cart[i]._id)
       .select("price")
       .exec();
@@ -48,7 +50,7 @@ exports.userCart = async (req, res) => {
     orderdBy: user._id,
   }).save();
 
-  console.log("new cart", newCart);
+  console.log("new cart ----> ", newCart);
   res.json({ ok: true });
 };
 
@@ -71,7 +73,6 @@ exports.emptyCart = async (req, res) => {
   res.json(cart);
 };
 
-
 exports.saveAddress = async (req, res) => {
   const userAddress = await User.findOneAndUpdate(
     { email: req.user.email },
@@ -80,7 +81,6 @@ exports.saveAddress = async (req, res) => {
 
   res.json({ ok: true });
 };
-
 
 exports.applyCouponToUserCart = async (req, res) => {
   const { coupon } = req.body;
@@ -107,6 +107,8 @@ exports.applyCouponToUserCart = async (req, res) => {
     cartTotal -
     (cartTotal * validCoupon.discount) / 100
   ).toFixed(2); // 99.99
+
+  console.log("----------> ", totalAfterDiscount);
 
   Cart.findOneAndUpdate(
     { orderdBy: user._id },
