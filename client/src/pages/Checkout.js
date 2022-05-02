@@ -84,7 +84,7 @@ const Checkout = ({ history }) => {
   const showAddress = () => (
     <>
       <ReactQuill theme="snow" value={address} onChange={setAddress} />
-      <button className="btn btn-primary mt-2" onClick={saveAddressToDb}>
+      <button disabled={!address} className="btn btn-primary mt-2" onClick={saveAddressToDb}>
         Save
       </button>
     </>
