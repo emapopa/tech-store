@@ -8,17 +8,23 @@ import Laptop from "../../images/laptop.png";
 import ProductListItems from "./ProductListItems";
 import StarRating from "react-star-ratings";
 import RatingModal from "../modal/RatingModal";
-import { showAverage } from "../../functions/rating"; 
+import { showAverage } from "../../functions/rating";
 import _ from "lodash";
 import { useSelector, useDispatch } from "react-redux";
+import { addToWishlist } from "../../functions/user";
+import { toast } from "react-toastify";
+import { useHistory } from "react-router-dom";
 
 const { TabPane } = Tabs;
 // this is childrend component of Product page
-const SingleProduct = ({ product, onStarClick, star  }) => {
+const SingleProduct = ({ product, onStarClick, star }) => {
   const [tooltip, setTooltip] = useState("Click to add");
   // redux
   const { user, cart } = useSelector((state) => ({ ...state }));
   const dispatch = useDispatch();
+
+  // router
+  let history = useHistory();
 
   const { title, images, description, _id } = product;
   const handleAddToCart = () => {
@@ -47,12 +53,21 @@ const SingleProduct = ({ product, onStarClick, star  }) => {
         type: "ADD_TO_CART",
         payload: unique,
       });
-       // show cart items in side drawer
-       dispatch({
+      // show cart items in side drawer
+      dispatch({
         type: "SET_VISIBLE",
         payload: true,
       });
     }
+  };
+
+  const handleAddToWishlist = (e) => {
+    e.preventDefault();
+    addToWishlist(product._id, user.token).then((res) => {
+      console.log("ADDED TO WISHLIST", res.data);
+      toast.success("Added to wishlist");
+      history.push("/user/wishlist");
+    });
   };
 
   return (
@@ -88,24 +103,24 @@ const SingleProduct = ({ product, onStarClick, star  }) => {
         <Card
           actions={[
             <Tooltip title={tooltip}>
-            <a onClick={handleAddToCart}>
-              <ShoppingCartOutlined className="text-danger" /> <br /> Add to
-              Cart
-            </a>
-          </Tooltip>,
-            <Link to="/">
+              <a onClick={handleAddToCart}>
+                <ShoppingCartOutlined className="text-danger" /> <br /> Add to
+                Cart
+              </a>
+            </Tooltip>,
+            <a onClick={handleAddToWishlist}>
               <HeartOutlined className="text-info" /> <br /> Add to Wishlist
-            </Link>,
-             <RatingModal>
-             <StarRating
-               name={_id}
-               numberOfStars={5}
-               rating={star}
-               changeRating={onStarClick}
-               isSelectable={true}
-               starRatedColor="red"
-             />
-           </RatingModal>
+            </a>,
+            <RatingModal>
+              <StarRating
+                name={_id}
+                numberOfStars={5}
+                rating={star}
+                changeRating={onStarClick}
+                isSelectable={true}
+                starRatedColor="red"
+              />
+            </RatingModal>,
           ]}
         >
           <ProductListItems product={product} />
