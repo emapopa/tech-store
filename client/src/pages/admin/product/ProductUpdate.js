@@ -17,8 +17,8 @@ const initialState = {
   shipping: "",
   quantity: "",
   images: [],
-  colors: ["Black", "Brown", "Silver", "White", "Blue"],
-  brands: ["Apple", "Samsung", "Microsoft", "Lenovo", "ASUS"],
+  colors: ["Black", "Brown", "Silver", "White", "Blue","Orange", "Green", "Purple", "Yellow", "Red"],
+  brands: ["Apple", "Samsung", "Microsoft", "Lenovo", "ASUS", "Dell", "LG", "Logitech", "Xiaomi", "Sony", "Motorolla", "Bose"],
   color: "",
   brand: "",
 };
